@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <script>
+    function mostrar(id) {
+      var objeto = document.getElementById(id)
+      objeto.style.display = "block";
+    }
+    function ocultar(id) {
+      var objeto = document.getElementById(id)
+      objeto.style.display = "none";
+    }
+  </script>
+  <style>
+    
+    body{
+      background-color: rgba(34, 208, 220, 0.351);
+    }
+    .oculto {
+      display: none;
+    }
+
+    /* Contenedor del popup */
+    .popup {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    /* pop-up actual */
+    .popup .popuptext {
+      visibility: hidden;
+      width: 160px;
+      background-color: #555;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 8px 0;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -80px;
+    }
+
+    /* Muestra del Pop-up*/
+    .popup .popuptext::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #555 transparent transparent transparent;
+    }
+
+    /* Cambio para mostrar/ocultar el contenedor del pop-up */
+    .popup .show {
+      visibility: visible;
+      -webkit-animation: fadeIn 1s;
+      animation: fadeIn 1s
+    }
+   input {
+    width: 100px;
+    height: 30px;
+    margin: 20px;
+    margin-left: 350px;
+    background-color: rgb(248, 249, 249);
+    border-radius: 10px;
+    font-family: cursive;
+    border-color: rgb(65, 139, 218);
+    }
+   
+  </style>
+</head>
+
+<body>
+
+  <canvas width="1500" height="520" id="lienzo"></canvas>
+
+  <script>
+    var cv, cx, objetos, objetoActual = null;
+    var inicioX = 0, inicioY = 0;
+
+    const array = ['¿', 'CON', 'RI', 'TE', 'GO', 'SA', 'MI', 'AS', 'CA', '?', ' ', ' '];
+    function actualizar() {
+      cx.fillStyle = '#f0f0f0';
+      cx.fillRect(0, 0, 1500, 520);
+
+      for (var i = 0; i < objetos.length; i++) {
+        cx.fillStyle = objetos[i].color;
+        cx.fillRect(objetos[i].x, objetos[i].y, objetos[i].width, objetos[i].height);
+        cx.strokeText(array[i], objetos[i].x, objetos[i].y + 70, objetos[i].width, objetos[i].height);
+        cx.font = "60px Courier New";
+
+      }
+    }
+
+
+    window.onload = function () {
+      objetos = [];
+      cv = document.getElementById('lienzo');
+      cx = cv.getContext('2d');
+      // agregar objetos de prueba
+
+      objetos.push({
+        x: 100, y: 50,
+        width: 40, height: 100,
+        color: '#418BDA'
+        
+      });
+      objetos.push({
+        x: 180, y: 50,
+        width: 100, height: 100,
+        color: '#FFAED3'
+        //color: '#E4C6F0'
+      });
+      objetos.push({
+        x: 310, y: 50,
+        width: 65, height: 100,
+        color: '#D09DEF'
+      });
+      objetos.push({
+        x: 415, y: 50,
+        width: 100, height: 100,
+        color: '#9BDFEF'
+      });
+      objetos.push({
+        x: 545, y: 50,
+        width: 65, height: 100,
+        color: '#FFAED3'
+      });
+      objetos.push({
+        x: 640, y: 50,
+        width: 65, height: 100,
+        color: '#D09DEF'
+      });
+      objetos.push({
+        x: 740, y: 50,
+        width: 65, height: 100,
+        color: '#FFAED3'
+      });
+      objetos.push({
+        x: 840, y: 50,
+        width: 90, height: 100,
+        color: '#D09DEF'
+      });
+      objetos.push({
+        x: 980, y: 50,
+        width: 65, height: 100,
+        color: '#D09DEF'
+      });
+      objetos.push({
+        x: 1080, y: 50,
+        width: 50, height: 100,
+        color: '#418BDA'
+      });
+
+      objetos.push({
+        x: 250, y: 500,
+        width: 800, height: 5,
+        color: '#418BDA'
+      });
+      objetos.push({
+        x: 250, y: 380,
+        width: 800, height: 5,
+        color: '#418BDA'
+      });
+
+
+      actualizar();
+
+
+      cv.onmousedown = function (event) {
+        for (var i = 0; i < objetos.length; i++) {
+          if (objetos[i].x < event.clientX
+            && (objetos[i].width + objetos[i].x > event.clientX)
+            && objetos[i].y < event.clientY
+            && (objetos[i].height + objetos[i].y > event.clientY)
+          ) {
+            objetoActual = objetos[i];
+            inicioY = event.clientY - objetos[i].y;
+            inicioX = event.clientX - objetos[i].x;
+
+            break;
+          }
+        }
+      }
+
+      cv.onmousemove = function (event) {
+        if (objetoActual != null) {
+          objetoActual.x = event.clientX - inicioX;
+          objetoActual.y = event.clientY - inicioY;
+        }
+        actualizar();
+      }
+
+      cv.onmouseup = function (evet) {
+        objetoActual = null;
+      }
+    }
+
+
+    function FbotonOn() {
+
+      //if (document.getElementById('checkBox').checked) {
+        var img = new Image();
+        img.src = "ds.jpg";
+        cx.drawImage(img, 0, 0);
+
+        img.onload = function () {
+          cx.drawImage(img, 0, 0);
+          document.getElementById('texto').innerHTML = "TE AMO MUCHISIMO!!!!!!";
+        }
+    //  }
+     // else {
+
+
+      //}
+    }
+
+    function myFunction() {
+      var popup = document.getElementById("myPopup");
+      popup.classList.toggle("show");
+      //<input type="checkbox" id="checkBox">
+     // <input type="checkbox" id="checkBox">
+    }
+
+  </script>
+</body>
+<footer >
+  
+  <input type="button" id='button' value="SI"  onclick="FbotonOn()">
+  <span></span>
+
+    <div class="popup" onclick="myFunction()">
+      
+      <input type="button" id='button' value="NO" onclick="actualizar()">
+      <span class="popuptext" id="myPopup">RESPUESTA EQUIVOCADA</span>
+
+    </div>
+
+</footer>
+
+</html>
